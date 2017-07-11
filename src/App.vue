@@ -1,5 +1,3 @@
-
-
 <template>
   <div class="fluid container" id="app">
     <div class="form-group form-group-lg panel panel-default">
@@ -12,7 +10,7 @@
         <div class="btn btn-default" v-on:click="onSignOut" v-if="user">Logout</div>
       </div>
     </div>
-    <router-view :user="user" :noteList="noteList"></router-view>
+    <router-view :user="user" :noteList="noteList" :firebasedb="firebasedb"></router-view>
   </div>
 </template>
 
@@ -32,7 +30,8 @@ export default {
   firebase: function () {
     return {
       user: null,
-      noteList: []
+      noteList: [],
+      firebasedb: firebaseApp.database()
     }
   },
   data: function () {

@@ -3,21 +3,12 @@
 <template>
   <div class="hello">
     <h1>{{ msg }}</h1>
-    <h2>Essential Links</h2>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank">Forum</a></li>
-      <li><a href="https://gitter.im/vuejs/vue" target="_blank">Gitter Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank">Twitter</a></li>
-      <br>
-      <li><a href="http://vuejs-templates.github.io/webpack/" target="_blank">Docs for This Template</a></li>
-    </ul>
-    <h2>Ecosystem</h2>
-    <ul>
-      <li><a href="http://router.vuejs.org/" target="_blank">vue-router</a></li>
-      <li><a href="http://vuex.vuejs.org/" target="_blank">vuex</a></li>
-      <li><a href="http://vue-loader.vuejs.org/" target="_blank">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank">awesome-vue</a></li>
+    <h2>矩陣列表</h2>
+    <ul class="list-group">
+      <li class="list-group-item" v-for="(note, index) in noteList" :key="index">
+        <router-link :to="{path:'/p/'+note.eisenhower_key}">{{ note.title }}</router-link>
+      </li>
+      <li class="list-group-item">增加</li>
     </ul>
   </div>
 </template>
@@ -25,9 +16,19 @@
 <script>
 export default {
   name: 'hello',
-  data () {
+  data: function () {
     return {
-      msg: 'Welcome to Your Vue.js App'
+      msg: 'Welcome Eisenhower Matrix'
+    }
+  },
+  props: {
+    user: {
+      type: Object,
+      default: null
+    },
+    noteList: {
+      type: Array,
+      default: []
     }
   }
 }
@@ -45,7 +46,6 @@ ul {
 }
 
 li {
-  display: inline-block;
   margin: 0 10px;
 }
 
