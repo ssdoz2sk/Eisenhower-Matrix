@@ -21,6 +21,7 @@
 export default {
   name: 'hello',
   data: function () {
+    return {}
   },
   props: {
     user: {
