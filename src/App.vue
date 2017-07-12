@@ -6,7 +6,7 @@
       </div>
       <div class="panel-body">
         <div class="btn btn-default" v-on:click="onSignIn" v-if="!user" >Login</div>
-        <div class="user" v-on:click="onSignIn" v-if="user">Hello <img v-bind:src="user.photoURL" style="height: 32px; width: 32px;">{{user.displayName}}</div>
+        <div class="user" v-on:click="onSignIn" v-if="user">歡迎 <img v-bind:src="user.photoURL" style="height: 32px; width: 32px;">{{user.displayName}}</div>
         <div class="btn btn-default" v-on:click="onSignOut" v-if="user">Logout</div>
       </div>
     </div>
@@ -30,7 +30,7 @@ export default {
   firebase: function () {
     return {
       user: null,
-      noteList: [],
+      noteList: {},
       firebasedb: firebaseApp.database()
     }
   },
@@ -39,7 +39,7 @@ export default {
       firebase: firebaseApp,
       firebasedb: firebaseApp.database(),
       user: null,
-      noteList: []
+      noteList: {}
     }
   },
   beforeCreate: function () {
@@ -49,6 +49,11 @@ export default {
         this.firebasedb.ref('noteList/').child(user.uid).once('value')
           .then((dataSnapshot) => {
             this.noteList = dataSnapshot.val()
+
+            if (!this.noteList) {
+              this.noteList = {}
+            }
+            console.log(this.noteList)
           })
       } else {
         this.user = null
@@ -71,7 +76,6 @@ export default {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
   color: #2c3e50;
   margin-top: 60px;
 }
