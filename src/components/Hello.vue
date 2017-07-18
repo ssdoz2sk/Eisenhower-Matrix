@@ -6,11 +6,12 @@
     <h2>魔術方塊列表</h2>
     <span>Double Click to Edit Text</span>
     <ul class="list-group">
-      <li class="list-group-item" v-for="(note, index) in noteList" :key="index" @dblclick = "note.editNote = true">
+      <li class="list-group-item" v-for="(note, index) in noteList" :key="index" @dblclick = "onEditTitle(note)">
         <router-link :to="{path:'/p/'+note.eisenhower_key}" v-show="note.editNote == false">{{ note.title }}</router-link>
         <input v-show="note.editNote == true" v-model="note.title"
-          v-on:blur = "note.editNote = false"
-          @keyup.enter = "note.editNote = false">
+          v-focus = "note.editNote"
+          v-on:blur = "saveTitle(note)"
+          @keyup.enter = "saveTitle(note)">
       </li>
       <li class="list-group-item" @click="addMatrix">增加</li>
     </ul>
@@ -48,20 +49,40 @@ export default {
 
       var noteRef = this.firebasedb.ref('noteList').child(this.user.uid)
       var notePush = noteRef.push()
+      var notePushKey = notePush.key
       notePush.set({
+        thisKey: notePushKey,
         eisenhower_key: pushKey,
         title: 'Default',
         editNote: false
       })
-      this.$set(this.noteList, notePush.key, {
-        this_key: notePush.key,
+      console.log(notePushKey)
+      this.$set(this.noteList, notePushKey, {
+        thisKey: notePushKey,
         eisenhower_key: pushKey,
         title: 'Default',
         editNote: false
       })
     },
+    onEditTitle (note) {
+      note.editNote = true
+      console.log(this.$children)
+    },
     saveTitle (note) {
-      // noteRef = this.firebasedb.ref('noteList').child(this.user.uid).child(note.this_key)
+      var noteRef = this.firebasedb.ref('noteList').child(this.user.uid).child(note.thisKey)
+      noteRef.update({
+        'title': note.title
+      })
+      note.editNote = false
+    }
+  },
+  directives: {
+    focus (el, { value }, { context }) {
+      if (value) {
+        context.$nextTick(() => {
+          el.focus()
+        })
+      }
     }
   }
 }

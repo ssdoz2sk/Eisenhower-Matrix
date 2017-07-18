@@ -1,16 +1,28 @@
 <template>
-  <div class="fluid container" id="app">
-    <div class="form-group form-group-lg panel panel-default">
-      <div class="panel-heading">
-        <h3 class="panel-title">Sortbale control</h3>
+  <div id="app">
+    <nav class="navbar navbar-fixed-top navbar-inverse">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a href="/" id="logo" class="navbar-brand">艾森豪魔術方塊</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse" aria-expanded="true">
+          <ul class="nav navbar-nav navbar-right">
+            <li v-on:click="onSignIn" v-if="!user"><a>Login</a></li>
+            <li v-if="user"><a><img v-bind:src="user.photoURL" style="height: 28px; width: 28px;">{{user.displayName}}</a></li>
+            <li v-on:click="onSignOut" v-if="user"><a>Logout</a></li>
+          </ul>
+        </div>
       </div>
-      <div class="panel-body">
-        <div class="btn btn-default" v-on:click="onSignIn" v-if="!user" >Login</div>
-        <div class="user" v-on:click="onSignIn" v-if="user">歡迎 <img v-bind:src="user.photoURL" style="height: 32px; width: 32px;">{{user.displayName}}</div>
-        <div class="btn btn-default" v-on:click="onSignOut" v-if="user">Logout</div>
-      </div>
+    </nav>
+    <div class="fluid container">
+      <router-view :user="user" :noteList="noteList" :firebasedb="firebasedb"></router-view>
     </div>
-    <router-view :user="user" :noteList="noteList" :firebasedb="firebasedb"></router-view>
   </div>
 </template>
 
@@ -84,5 +96,20 @@ export default {
 .user {
   font-size: 2rem;
   float: right;
+}
+
+
+#logo {
+  float: left;
+  margin-right: 10px;
+  font-size: 1.7em;
+  color: white;
+  text-transform: uppercase;
+  font-weight: bold;
+  
+}
+
+.nav {
+  color: white;
 }
 </style>
