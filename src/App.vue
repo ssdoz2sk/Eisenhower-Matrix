@@ -9,7 +9,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a href="/" id="logo" class="navbar-brand">艾森豪魔術方塊</a>
+          <router-link :to="{path:'/'}" id="logo" class="navbar-brand">艾森豪魔術方塊</router-link>
         </div>
         <div id="navbar" class="navbar-collapse collapse" aria-expanded="true">
           <ul class="nav navbar-nav navbar-right">
