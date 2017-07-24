@@ -21,7 +21,7 @@
       </div>
     </nav>
     <div class="fluid container">
-      <router-view :user="user" :noteList="noteList" :firebasedb="firebasedb"></router-view>
+      <router-view :user="user" :firebasedb="firebasedb"></router-view>
     </div>
   </div>
 </template>

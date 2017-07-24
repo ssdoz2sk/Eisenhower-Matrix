@@ -1,22 +1,23 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Hello from '@/components/Hello'
-import Note from '@/components/Note'
 
 Vue.use(Router)
 
 export default new Router({
+  mode: 'history',
   routes: [
     {
       path: '/',
       name: 'Hello',
+      props: true,
       component: Hello
     },
     {
       path: '/p/:id',
-      name: 'Note',
+      name: 'Hello',
       props: true,
-      component: Note
+      component: Hello
     },
     {
       path: '*',
