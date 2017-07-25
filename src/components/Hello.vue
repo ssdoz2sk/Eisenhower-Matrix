@@ -3,6 +3,9 @@
 <template>
   <div class="hello">
     <h1>艾森豪魔術方塊</h1>
+    <div class="alert alert-warning" v-show="showAlert == true">
+      <strong>Warning!</strong> {{showMessage}}
+    </div>
     <div class="table">
       <div class="table-row">
         <div  class="table-th"></div>
@@ -12,7 +15,7 @@
       <div class="table-row">
         <div  class="table-th">重要</div>
         <div  class="table-cell">
-          <draggable class="list-group fill-cell" element="ul" v-model="list"  :options="{draggable:'.item', group:'eis'}" :move="onMove" @start="isDragging=true" @end="onMoveEnd"> 
+          <draggable class="list-group fill-cell" element="ul" v-model="list"  :options="dragOptions" :move="onMove" @start="isDragging=true" @end="onMoveEnd"> 
             <li class="list-group-item item" v-for="element in list" :key="element.order"  @click.self="onEdit(list, element)"> 
               <i :class="element.fixed? 'fa fa-anchor' : 'glyphicon glyphicon-pushpin'" @click="element.fixed=! element.fixed" aria-hidden="true"></i>
               {{element.title}}
@@ -23,7 +26,7 @@
           </draggable>
         </div>
         <div  class="table-cell">
-          <draggable class="list-group fill-cell" element="ul" v-model="list2" :options="{draggable:'.item', group:'eis'}" :move="onMove" @start="isDragging=true" @end="onMoveEnd"> 
+          <draggable class="list-group fill-cell" element="ul" v-model="list2" :options="dragOptions" :move="onMove" @start="isDragging=true" @end="onMoveEnd"> 
             <li class="list-group-item item" v-for="element in list2" :key="element.order"  @click.self="onEdit(list2, element)"> 
               <i :class="element.fixed? 'fa fa-anchor' : 'glyphicon glyphicon-pushpin'" @click=" element.fixed=! element.fixed" aria-hidden="true"></i>
               {{element.title}}
@@ -37,7 +40,7 @@
       <div class="table-row">
         <div  class="table-th">不重要</div>
         <div  class="table-cell">
-          <draggable class="list-group fill-cell" element="ul" v-model="list3" :options="{draggable:'.item', group:'eis'}" :move="onMove" @start="isDragging=true" @end="onMoveEnd"> 
+          <draggable class="list-group fill-cell" element="ul" v-model="list3" :options="dragOptions" :move="onMove" @start="isDragging=true" @end="onMoveEnd"> 
             <li class="list-group-item item" v-for="element in list3" :key="element.order"  @click.self="onEdit(list3, element)"> 
               <i :class="element.fixed? 'fa fa-anchor' : 'glyphicon glyphicon-pushpin'" @click=" element.fixed=! element.fixed" aria-hidden="true"></i>
               {{element.title}}
@@ -48,7 +51,7 @@
           </draggable>
         </div>
         <div  class="table-cell">
-          <draggable class="list-group fill-cell" element="ul" v-model="list4" :options="{draggable:'.item', group:'eis'}" :move="onMove" @start="isDragging=true" @end="onMoveEnd"> 
+          <draggable class="list-group fill-cell" element="ul" v-model="list4" :options="dragOptions" :move="onMove" @start="isDragging=true" @end="onMoveEnd"> 
             <li class="list-group-item item" v-for="element in list4" :key="element.order"  @click.self="onEdit(list4, element)" > 
               <i :class="element.fixed? 'fa fa-anchor' : 'glyphicon glyphicon-pushpin'" @click="element.fixed =! element.fixed" aria-hidden="true"></i>
                 {{element.title}}
@@ -66,16 +69,36 @@
     <modal v-if="showModal" @close="showModal = false">
       <div slot="header">
         <h3 v-show = "editing == false">{{ editingElement.title }}</h3>
-        <h3><input v-show = "editing == true" class="fill-cell" v-model="editingElement.title" placeholder="標題"></h3>
+        <h3><input v-show = "editing == true" class="form-control fill-cell" v-model="editingElement.title" placeholder="標題"></h3>
       </div>
       <div slot="body" class="fill-cell">
-        <div class="fill-cell" v-show = "editing == false">
+
+
+        <div class="fill-cell fill-cell-90p" v-show = "editing == false">
           <span class="fill-cell" >
             {{ editingElement.content }}
           </span>
         </div>
-        <textarea v-show = "editing == true" placeholder="內容"
-          class="fill-cell" v-model="editingElement.content"></textarea>
+        <textarea v-show = "editing == true" placeholder="內容" class="form-control fill-cell fill-cell-90p" v-model="editingElement.content"></textarea>
+
+        <div class="row ">
+          <div class="col-xs-4">
+            <label class="label-ellipsis">預計總時間</label>
+          </div>
+          <div class="col-xs-8 ">
+            <span v-show = "editing == false">{{editingElement.estimatedTime}}</span>
+            <input v-show = "editing == true" type="number" class="form-control" min="0" v-model="editingElement.estimatedTime">
+          </div>
+        </div>
+        <div class="row ">
+          <div class="col-xs-4">
+            <label class="label-ellipsis">已花費時間</label>
+          </div>
+          <div class="col-xs-8 ">
+            <span v-show = "editing == false">{{editingElement.usedTime}}</span>
+            <input v-show = "editing == true" type="number" class="form-control" min="0" v-model="editingElement.usedTime">
+          </div>
+        </div>
       </div>
       <div slot="footer">
         <button class="btn btn-danger footer-left" @click="onDel">刪除</button>
@@ -97,7 +120,7 @@ export default {
   name: 'note',
   data: function () {
     return {
-      editAble: false,
+      editAble: true,
       isDragging: false,
       delayedDragging: false,
       list: [],
@@ -105,11 +128,14 @@ export default {
       list3: [],
       list4: [],
       selectElement: null,
+      editingElement: null,
       showModal: false,
       editing: false,
       adding: false,
       addingList: null,
-      publishLink: ''
+      publishLink: '',
+      showAlert: false,
+      showMessage: ''
     }
   },
   components: {
@@ -160,6 +186,8 @@ export default {
           } else {
             this.editAble = false
             console.log('Please Login')
+            this.showAlert = true
+            this.showMessage = '請先登入'
             return
           }
         }
@@ -211,9 +239,9 @@ export default {
       this.selectElement = element
       this.editingElement = {
         title: element.title,
-        editTitle: false,
         content: element.content,
-        editContent: false
+        estimatedTime: element.estimatedTime,
+        usedTime: element.usedTime
       }
       this.showModal = true
     },
@@ -225,11 +253,15 @@ export default {
         this.editingList.push({
           title: this.editingElement.title,
           content: this.editingElement.content,
+          estimatedTime: this.editingElement.estimatedTime,
+          usedTime: this.editingElement.usedTime,
           fixed: false
         })
       } else {
         this.selectElement.title = this.editingElement.title
         this.selectElement.content = this.editingElement.content
+        this.selectElement.estimatedTime = this.editingElement.estimatedTime
+        this.selectElement.usedTime = this.editingElement.usedTime
       }
       this.showModal = false
       this.adding = false
@@ -245,7 +277,9 @@ export default {
       this.editingList = list
       this.editingElement = {
         title: '',
-        content: ''
+        content: '',
+        estimatedTime: 0,
+        usedTime: 0
       }
       this.adding = true
       this.editing = true
@@ -254,9 +288,10 @@ export default {
   },
   computed: {
     dragOptions () {
-      return {
+      return { // {draggable:'.item', group:'eis'}
         animation: 0,
         group: 'description',
+        disabled: !this.editAble,
         ghostClass: 'ghost'
       }
     }
@@ -310,6 +345,21 @@ export default {
     width: 100%;
     min-width: 100%;
     display: block;
+  }
+
+  .fill-cell-90p {
+    height: 90%;
+    /*min-height: 100%;*/
+    width: 100%;
+    min-width: 100%;
+    display: block;
+  }
+
+  .label-ellipsis {
+    width: 100%;
+    overflow: hidden; 
+    white-space: nowrap; 
+    text-overflow: ellipsis;
   }
 
   .footer-left {
