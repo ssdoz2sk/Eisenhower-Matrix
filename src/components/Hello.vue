@@ -27,7 +27,7 @@
         </div>
         <div  class="table-cell">
           <draggable class="list-group fill-cell" element="ul" v-model="list2" :options="dragOptions" :move="onMove" @start="isDragging=true" @end="onMoveEnd"> 
-            <li class="list-group-item item" v-for="element in list2" :key="element.order"  @click.self="onEdit(list2, element)"> 
+            <li class="list-group-item item" v-for="element in list2" :key="element.order"  @click.self="onEdit(list2, element)" > 
               <i :class="element.fixed? 'fa fa-anchor' : 'glyphicon glyphicon-pushpin'" @click=" element.fixed=! element.fixed" aria-hidden="true"></i>
               {{element.title}}
             </li> 
@@ -75,9 +75,9 @@
 
 
         <div class="fill-cell fill-cell-90p" v-show = "editing == false">
-          <span class="fill-cell" >
+          <p class="fill-cell" >
             {{ editingElement.content }}
-          </span>
+          </p>
         </div>
         <textarea v-show = "editing == true" placeholder="內容" class="form-control fill-cell fill-cell-90p" v-model="editingElement.content"></textarea>
 
@@ -86,17 +86,18 @@
             <label class="label-ellipsis">預計總時間</label>
           </div>
           <div class="col-xs-8 ">
-            <span v-show = "editing == false">{{editingElement.estimatedTime}}</span>
-            <input v-show = "editing == true" type="number" class="form-control" min="0" v-model="editingElement.estimatedTime">
+            <span v-show = "editing == false" class="fill-cell">{{editingElement.estimatedTime}} 小時</span>
+            <input v-show = "editing == true" type="number" class="form-control" min="0" v-model.number="editingElement.estimatedTime">
           </div>
         </div>
         <div class="row ">
           <div class="col-xs-4">
-            <label class="label-ellipsis">已花費時間</label>
+            <label class="label-ellipsis">已執行時間</label>
           </div>
           <div class="col-xs-8 ">
-            <span v-show = "editing == false">{{editingElement.usedTime}}</span>
-            <input v-show = "editing == true" type="number" class="form-control" min="0" v-model="editingElement.usedTime">
+            <span v-show = "editing == false" v-bind:class="timeoverEditing" class="fill-cell">{{editingElement.usedTime}} 小時</span>
+            <input v-show = "editing == true" type="number" class="form-control" min="0" 
+              v-model.number="editingElement.usedTime" v-bind:class="timeoverEditing">
           </div>
         </div>
       </div>
@@ -294,6 +295,11 @@ export default {
         disabled: !this.editAble,
         ghostClass: 'ghost'
       }
+    },
+    timeoverEditing: function () {
+      return {
+        timeover: this.editingElement.usedTime > this.editingElement.estimatedTime
+      }
     }
   },
   watch: {
@@ -362,7 +368,12 @@ export default {
     text-overflow: ellipsis;
   }
 
+  .timeover {
+    background-color: pink
+  }
+
   .footer-left {
     float: left
   }
+
 </style>
