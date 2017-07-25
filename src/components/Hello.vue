@@ -16,8 +16,8 @@
         <div  class="table-th">重要</div>
         <div  class="table-cell">
           <draggable class="list-group fill-cell" element="ul" v-model="list"  :options="dragOptions" :move="onMove" @start="isDragging=true" @end="onMoveEnd"> 
-            <li class="list-group-item item" v-for="element in list" :key="element.order"  @click.self="onEdit(list, element)"> 
-              <i :class="element.fixed? 'fa fa-anchor' : 'glyphicon glyphicon-pushpin'" @click="element.fixed=! element.fixed" aria-hidden="true"></i>
+            <li class="list-group-item item" v-for="element in list" :key="element.order"  @click.self="onEdit(list, element)" :class="{'timeover': element.usedTime>element.estimatedTime}"> 
+              <i :class="element.fixed? 'fa fa-anchor' : 'glyphicon glyphicon-pushpin'" @click="onFixed(element)" aria-hidden="true"></i>
               {{element.title}}
             </li> 
             <li class="list-group-item" slot="footer" @click.self="onCreate(list)">
@@ -27,8 +27,8 @@
         </div>
         <div  class="table-cell">
           <draggable class="list-group fill-cell" element="ul" v-model="list2" :options="dragOptions" :move="onMove" @start="isDragging=true" @end="onMoveEnd"> 
-            <li class="list-group-item item" v-for="element in list2" :key="element.order"  @click.self="onEdit(list2, element)" > 
-              <i :class="element.fixed? 'fa fa-anchor' : 'glyphicon glyphicon-pushpin'" @click=" element.fixed=! element.fixed" aria-hidden="true"></i>
+            <li class="list-group-item item" v-for="element in list2" :key="element.order"  @click.self="onEdit(list2, element)" :class="{'timeover': element.usedTime>element.estimatedTime}" > 
+              <i :class="element.fixed? 'fa fa-anchor' : 'glyphicon glyphicon-pushpin'" @click="onFixed(element)" aria-hidden="true"></i>
               {{element.title}}
             </li> 
             <li class="list-group-item" slot="footer" @click.self="onCreate(list2)">
@@ -41,8 +41,8 @@
         <div  class="table-th">不重要</div>
         <div  class="table-cell">
           <draggable class="list-group fill-cell" element="ul" v-model="list3" :options="dragOptions" :move="onMove" @start="isDragging=true" @end="onMoveEnd"> 
-            <li class="list-group-item item" v-for="element in list3" :key="element.order"  @click.self="onEdit(list3, element)"> 
-              <i :class="element.fixed? 'fa fa-anchor' : 'glyphicon glyphicon-pushpin'" @click=" element.fixed=! element.fixed" aria-hidden="true"></i>
+            <li class="list-group-item item" v-for="element in list3" :key="element.order"  @click.self="onEdit(list3, element)" :class="{'timeover': element.usedTime>element.estimatedTime}"> 
+              <i :class="element.fixed? 'fa fa-anchor' : 'glyphicon glyphicon-pushpin'" @click="onFixed(element)" aria-hidden="true"></i>
               {{element.title}}
             </li> 
             <li class="list-group-item" slot="footer" @click.self="onCreate(list3)">
@@ -52,8 +52,8 @@
         </div>
         <div  class="table-cell">
           <draggable class="list-group fill-cell" element="ul" v-model="list4" :options="dragOptions" :move="onMove" @start="isDragging=true" @end="onMoveEnd"> 
-            <li class="list-group-item item" v-for="element in list4" :key="element.order"  @click.self="onEdit(list4, element)" > 
-              <i :class="element.fixed? 'fa fa-anchor' : 'glyphicon glyphicon-pushpin'" @click="element.fixed =! element.fixed" aria-hidden="true"></i>
+            <li class="list-group-item item" v-for="element in list4" :key="element.order"  @click.self="onEdit(list4, element)" :class="{'timeover': element.usedTime>element.estimatedTime}" > 
+              <i :class="element.fixed? 'fa fa-anchor' : 'glyphicon glyphicon-pushpin'" @click="onFixed(element)" aria-hidden="true"></i>
                 {{element.title}}
             </li> 
             <li class="list-group-item" slot="footer" @click.self="onCreate(list4)">
@@ -64,22 +64,21 @@
       </div>
     </div>
 
-    <div>publish link: <a v-bind:href="publishLink">{{ publishLink }}</a></div>
+    <!--<div>publish link: <a v-bind:href="publishLink">{{ publishLink }}</a></div>-->
 
     <modal v-if="showModal" @close="showModal = false">
       <div slot="header">
         <h3 v-show = "editing == false">{{ editingElement.title }}</h3>
-        <h3><input v-show = "editing == true" class="form-control fill-cell" v-model="editingElement.title" placeholder="標題"></h3>
+        <h3 v-show = "editing == true" class="form-inline">工作項目：<input class="form-control" v-model="editingElement.title" placeholder="標題"></h3>
       </div>
       <div slot="body" class="fill-cell">
-
-
         <div class="fill-cell fill-cell-90p" v-show = "editing == false">
-          <p class="fill-cell" >
-            {{ editingElement.content }}
-          </p>
+          <vue-markdown class="fill-cell" style="overflow:scroll;" :source="editingElement.content"></vue-markdown>
         </div>
-        <textarea v-show = "editing == true" placeholder="內容" class="form-control fill-cell fill-cell-90p" v-model="editingElement.content"></textarea>
+        <div v-show = "editing == true" class="fill-cell fill-cell-90p">
+          <h4>工作內容：</h4>
+          <textarea placeholder="內容" class="form-control fill-cell fill-cell-90p" v-model="editingElement.content"></textarea>
+        </div>
 
         <div class="row ">
           <div class="col-xs-4">
@@ -115,6 +114,7 @@
 
 <script>
 import draggable from 'vuedraggable'
+import VueMarkdown from 'vue-markdown'
 import Modal from '@/components/Modal'
 
 export default {
@@ -135,13 +135,14 @@ export default {
       adding: false,
       addingList: null,
       publishLink: '',
-      showAlert: false,
-      showMessage: ''
+      showAlert: true,
+      showMessage: '請先登入'
     }
   },
   components: {
     draggable,
-    Modal
+    Modal,
+    VueMarkdown
   },
   props: {
     user: {
@@ -152,55 +153,6 @@ export default {
       type: Object,
       default: null
     }
-  },
-  mounted: function () {
-    var timer = 0
-    var checkAuthInterval = setInterval(() => {
-      timer++
-      if (this.user || timer >= 5) {
-        clearInterval(checkAuthInterval)
-        var matrixId = this.$route.params.id
-        var getRef = null
-        console.log(matrixId)
-
-        if (this.user) { // Already Login
-          if (matrixId) { // 看別人或自己的 matrix
-            if (matrixId === this.user.uid) {
-              this.editAble = true
-              this.publishLink = window.location.host + '/p/' + matrixId
-              getRef = this.firebasedb.ref('eisenhower').child(matrixId)
-            } else {
-              this.editAble = false
-              getRef = this.firebasedb.ref('eisenhower').child(matrixId)
-              this.publishLink = window.location.host + '/p/' + matrixId
-            }
-          } else {
-            this.editAble = true
-            getRef = this.firebasedb.ref('eisenhower').child(this.user.uid)
-            this.publishLink = window.location.host + '/p/' + this.user.uid
-          }
-        } else {
-          if (matrixId) { // 別人的 martix
-            this.editAble = false
-            getRef = this.firebasedb.ref('eisenhower').child(matrixId)
-            this.publishLink = window.location.host + '/p/' + matrixId
-          } else {
-            this.editAble = false
-            console.log('Please Login')
-            this.showAlert = true
-            this.showMessage = '請先登入'
-            return
-          }
-        }
-        getRef.on('value', (snap) => {
-          var data = snap.val()
-          this.list = data.do || []
-          this.list2 = data.decide || []
-          this.list3 = data.delegate || []
-          this.list4 = data.delete || []
-        })
-      }
-    }, 250)
   },
   methods: {
     save () {
@@ -218,6 +170,10 @@ export default {
       }).catch(function (error) {
         console.error('Error writing new message to Firebase Database', error)
       })
+    },
+    onFixed (element) {
+      element.fixed = !element.fixed
+      this.save()
     },
     onMove ({relatedContext, draggedContext}) {
       const relatedElement = relatedContext.element
@@ -275,6 +231,10 @@ export default {
       this.showModal = false
     },
     onCreate (list) {
+      if (!this.user) {
+        alert('請先登入')
+        return
+      }
       this.editingList = list
       this.editingElement = {
         title: '',
@@ -310,6 +270,51 @@ export default {
       }
       this.$nextTick(() => {
         this.delayedDragging = false
+      })
+    },
+    user (newUser) {
+      var matrixId = this.$route.params.id
+      var getRef = null
+      if (newUser) { // Already Login
+        this.showAlert = false
+        if (matrixId) { // 看別人或自己的 matrix
+          if (matrixId === newUser.uid) {
+            this.editAble = true
+            this.publishLink = window.location.host + '/p/' + matrixId
+            getRef = this.firebasedb.ref('eisenhower').child(matrixId)
+          } else {
+            this.editAble = false
+            getRef = this.firebasedb.ref('eisenhower').child(matrixId)
+            this.publishLink = window.location.host + '/p/' + matrixId
+          }
+        } else {
+          this.editAble = true
+          getRef = this.firebasedb.ref('eisenhower').child(newUser.uid)
+          this.publishLink = window.location.host + '/p/' + newUser.uid
+        }
+      } else {
+        if (matrixId) { // 別人的 martix
+          this.editAble = false
+          getRef = this.firebasedb.ref('eisenhower').child(matrixId)
+          this.publishLink = window.location.host + '/p/' + matrixId
+        } else {
+          this.editAble = false
+          console.log('Please Login')
+          this.showAlert = true
+          this.showMessage = '請先登入'
+          this.list = []
+          this.list2 = []
+          this.list3 = []
+          this.list4 = []
+          return
+        }
+      }
+      getRef.on('value', (snap) => {
+        var data = snap.val()
+        this.list = data.do || []
+        this.list2 = data.decide || []
+        this.list3 = data.delegate || []
+        this.list4 = data.delete || []
       })
     }
   }

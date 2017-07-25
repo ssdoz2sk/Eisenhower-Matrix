@@ -60,7 +60,7 @@ export default {
 
 .modal-container {
   width: 80%;
-  height: 80%;
+  height: 95vh;
   margin: 0px auto;
   padding: 20px 30px;
   background-color: #fff;
@@ -71,14 +71,19 @@ export default {
 }
 
 .modal-header h3 {
+  height: 30px;
   margin-top: 0;
   color: #42b983;
 }
 
 .modal-body {
-  height: 75%;
+  height: calc(100vh - 70px - 95px - 80px);
   margin: 20px 0;
   text-align: left;
+}
+
+.modal-footer {
+  height: 65px;
 }
 
 .modal-default-button {

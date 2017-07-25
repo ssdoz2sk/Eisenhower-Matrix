@@ -13,9 +13,9 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse" aria-expanded="true">
           <ul class="nav navbar-nav navbar-right">
-            <li v-on:click="onSignIn" v-if="!user"><a>Login</a></li>
+            <li v-on:click="onSignIn" v-if="!user" style="cursor: pointer;"><a>Login</a></li>
             <li v-if="user"><a><img v-bind:src="user.photoURL" style="height: 28px; width: 28px;">{{user.displayName}}</a></li>
-            <li v-on:click="onSignOut" v-if="user"><a>Logout</a></li>
+            <li v-on:click="onSignOut" v-if="user" style="cursor: pointer;"><a>Logout</a></li>
           </ul>
         </div>
       </div>
