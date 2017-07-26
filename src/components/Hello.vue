@@ -185,6 +185,9 @@ export default {
       this.save()
     },
     onDel () {
+      if (!confirm('確定要刪除這個嗎')) {
+        return
+      }
       var index = this.editingList.indexOf(this.selectElement)
       if (index > -1) {
         this.editingList.splice(index, 1)
