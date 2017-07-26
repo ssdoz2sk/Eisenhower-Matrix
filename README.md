@@ -21,7 +21,7 @@ npm run build
 
 ## 修改 firebase 設定
 > 修改 `index.html` 的第 16 - 20 行 
-> ```
+  ```
     window.firebaseConfig = {
       apiKey: 'AIzaSyDUrmO0CmQhXe74I7txd8jDmwHAMszxCPA',
       authDomain: 'eisenhower-fed8a.firebaseapp.com',
