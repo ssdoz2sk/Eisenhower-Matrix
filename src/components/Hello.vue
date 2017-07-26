@@ -338,7 +338,7 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
+<style>
 
   .table {
     display: table;
@@ -368,7 +368,7 @@ export default {
 
   .fill-cell {
     height: 100%;
-    /*min-height: 100%;*/
+    min-height: 100%;
     width: 100%;
     min-width: 100%;
     display: block;
@@ -376,7 +376,7 @@ export default {
 
   .fill-cell-90p {
     height: 90%;
-    /*min-height: 100%;*/
+    min-height: 90%;
     width: 100%;
     min-width: 100%;
     display: block;
@@ -397,7 +397,14 @@ export default {
     float: left
   }
   
-  #deleteModal[scoped] .modal-body {
-    height: 0
+  #deleteModal .modal-body {
+    height: 0;
+    margin: 0;
+    padding: 0;
+  }
+
+  #deleteModal .modal-container {
+    width: 40vh;
+    height: 160px;
   }
 </style>
