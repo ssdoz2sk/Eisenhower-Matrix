@@ -101,12 +101,22 @@
         </div>
       </div>
       <div slot="footer">
-        <button class="btn btn-danger footer-left" @click="onDel">刪除</button>
+        <button class="btn btn-danger footer-left" @click="onDelButton">刪除</button>
         <button class="btn btn-warning footer-left" v-show="editing == false" @click="editing = true">編輯</button>
         <button class="btn btn-warning footer-left" v-show="editing == true" @click="editing = false">完成</button>
 
         <button class="btn btn-success" @click="onEditDone">確定</button>
         <button class="btn btn-default" @click="onCancel">取消</button>
+      </div>
+    </modal>
+    <modal v-if="showDeleteModal" @close="showDeleteModal = false" id="deleteModal">
+      <div slot="header">
+        <h3>Are you sure?</h3>
+      </div>
+      <div slot="body"></div>
+      <div slot="footer">
+        <button type="button" data-dismiss="modal" class="btn btn-primary" @click="onDel">Delete</button>
+        <button type="button" data-dismiss="modal" class="btn" @click="showDeleteModal = false">Cancel</button>
       </div>
     </modal>
   </div>
@@ -131,6 +141,7 @@ export default {
       selectElement: null,
       editingElement: null,
       showModal: false,
+      showDeleteModal: false,
       editing: false,
       adding: false,
       addingList: null,
@@ -184,10 +195,11 @@ export default {
       this.isDragging = false
       this.save()
     },
+    onDelButton () {
+      this.showDeleteModal = true
+    },
     onDel () {
-      if (!confirm('確定要刪除這個嗎')) {
-        return
-      }
+      this.showDeleteModal = false
       var index = this.editingList.indexOf(this.selectElement)
       if (index > -1) {
         this.editingList.splice(index, 1)
@@ -384,5 +396,8 @@ export default {
   .footer-left {
     float: left
   }
-
+  
+  #deleteModal[scoped] .modal-body {
+    height: 0
+  }
 </style>
