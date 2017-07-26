@@ -1,30 +1,31 @@
-# eisenhower
+# 艾森豪魔術方塊
 
-> A Vue.js project
+> 一個使用 Vue.js 框架做成的 艾森豪魔術方塊
 
 ## Build Setup
 
 ``` bash
-# install dependencies
+# 安裝相依套件
 npm install
 
-# serve with hot reload at localhost:8080
+# 開發伺服器（自動reload） localhost:8080
 npm run dev
 
-# build for production with minification
+# production， 最小化 js css html
 npm run build
-
-# build for production and view the bundle analyzer report
-npm run build --report
-
-# run unit tests
-npm run unit
-
-# run e2e tests
-npm run e2e
-
-# run all tests
-npm test
 ```
 
-For detailed explanation on how things work, checkout the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+## 修改 GA 追蹤
+> 修改 `index.html` 的第 15 行 
+> `var ga_trackingid = XXXX`
+
+## 修改 firebase 設定
+> 修改 `index.html` 的第 16 - 20 行 
+> ```
+    window.firebaseConfig = {
+      apiKey: 'AIzaSyDUrmO0CmQhXe74I7txd8jDmwHAMszxCPA',
+      authDomain: 'eisenhower-fed8a.firebaseapp.com',
+      databaseURL: 'https://eisenhower-fed8a.firebaseio.com'
+    }
+  ```
+

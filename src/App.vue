@@ -30,11 +30,7 @@
 
 import firebase from 'firebase'
 
-var firebaseApp = firebase.initializeApp({
-  apiKey: 'AIzaSyDUrmO0CmQhXe74I7txd8jDmwHAMszxCPA',
-  authDomain: 'eisenhower-fed8a.firebaseapp.com',
-  databaseURL: 'https://eisenhower-fed8a.firebaseio.com'
-})
+var firebaseApp = firebase.initializeApp(window.firebaseConfig)
 var googleLoginProvider = new firebase.auth.GoogleAuthProvider()
 
 export default {
