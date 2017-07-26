@@ -188,6 +188,7 @@ export default {
       var index = this.editingList.indexOf(this.selectElement)
       if (index > -1) {
         this.editingList.splice(index, 1)
+        this.save()
       }
       this.showModal = false
     },
