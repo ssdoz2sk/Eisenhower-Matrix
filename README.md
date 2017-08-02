@@ -28,4 +28,31 @@ npm run build
       databaseURL: 'https://eisenhower-fed8a.firebaseio.com'
     }
   ```
-
+## firebase 資料路徑
+`eisenhower-fed8a / eisenhower / $uid /` 下有四個array
+ * decide
+ * delegate
+ * delete
+ * do
+ 
+每個array的成員有以下屬性
+  * content: 內容
+  * estimatedTime: 預計花費時間
+  * fixed: 固定
+  * title: 標題
+  * usedTime: 已經花費時間
+  
+## firebase 資料規則
+```
+{
+  "rules": {
+    "eisenhower": {
+      "$uid": {
+        ".write": "$uid === auth.uid",
+        ".read": true
+      },
+      ".write": "auth.uid != null"
+    },
+  }
+}
+```
